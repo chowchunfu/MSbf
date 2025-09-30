@@ -17,20 +17,21 @@ void writeBFResult() {
     time_t now = std::chrono::system_clock::to_time_t(t2);
     struct tm *local_tm = localtime(&now);
     strftime(datebuffer, 80, "%Y-%m-%d %H:%M:%S", local_tm);
-
+    f << "density," <<  std::fixed << std::setprecision(2) << pcal.density*100 << "%" << std::endl;
+    f << "length," << bfa.length << std::endl;
+    f << "width," << bfa.width << std::endl;
     f << "cachebuild," << bfa.stat.cachebuild << std::endl;
     f << "cachehit," << bfa.stat.cachehit << std::endl;
     f << "iteration," << bfa.stat.iteration << std::endl;
-    f << "node," << bfa.stat.node << std::endl;
-    f << "collision," << hashTable.stat_collision << std::endl;
-    f << "density," <<  std::fixed << std::setprecision(2) << pcal.density*100 << "%" << std::endl;
-    f << "confidence," << std::fixed << std::setprecision(14) << (double) 1 - hashTable.stat_collision / 1.8446744073709551616 / 1e19  << std::endl;
-    f << "elapsed," << std::fixed << std::setprecision(6) << elapsed << std::endl;
-    f << "date," << datebuffer << std::endl;
+    //f << "collision," << hashTable.stat_collision << std::endl;
 
 
-    f << "length," << bfa.length << std::endl;
-    f << "width," << bfa.width << std::endl;
+    f << "Elapsed: " << std::fixed << std::setprecision(6) << elapsed << " s" << std::endl;
+    f << "Nodes explored: " << bfa.stat.node << std::endl;
+    f << "Confidence: " << std::fixed << std::setprecision(14) << (double) 1 - bfa.stat.node / 1.8446744073709551616 / 1e19  << std::endl;
+    f << "Date: " << datebuffer << std::endl;
+
+
 
     f.close();
 
@@ -56,12 +57,12 @@ extern "C" void run(const char* filename) {
     board.from_file(filename);
     pcal = ProbabilityCalculator(&board);
     cArray2d candidates = pcal.permutateCandidateSolutions();
-
+    //candidates.to_file("abcd.txt");
     bfa = BruteForceAnalyzer(&candidates);
     t2 = std::chrono::system_clock::now(); // end clock
 
     elapsed = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1e6;
-
+    bfa.stat.print();
     writeBFResult();
 
 }
@@ -83,7 +84,8 @@ extern "C" double getWinningProbability(int index) {
 
 
 int main() {
-    run("mbf/bfa_3x3x2.txt");
+    //run("mbfa/b1.txt");
+    //run("mbfa/b2_1.txt");
 
 
     return 0;

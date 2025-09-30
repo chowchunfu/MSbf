@@ -2,6 +2,9 @@
 #include <cstring>
 #include <iostream>
 
+
+
+
 uint32_t hash24(int* begin, int* end) {
     // Reference: Jenkins's one_at_a_time hash
     uint32_t h = 123456789;
@@ -35,7 +38,19 @@ uint64_t hash64(int* begin, int* end) {
         h += *i;
         h += h << 10;
         h ^= h >> 6;
+        /*
+        h = (~h) + (h << 21); // key = (key << 21) - key - 1;
+        h = h ^ (h >> 24);
+        h = (h + (h << 3)) + (h << 8); // key * 265
+        h ^= h >> 14;
+        h = (h + (h << 2)) + (h << 4); // key * 21
+        h = h ^ (h >> 28);
+        h = h + (h << 31);
+        */
     }
+
+
+
     return h;
 }
 
@@ -52,7 +67,6 @@ struct HashTable {
 
     void clear() {
         memset(data, 0, 16800000*sizeof(HashDatum));
-
     }
 
     void insert(int* begin, int* end, int value) {

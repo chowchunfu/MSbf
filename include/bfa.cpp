@@ -18,6 +18,9 @@ const bool PRUNE = 0;
 char bfCache[16777216];
 char* bfWriter;
 
+std::map<std::vector<int>, int> mymap;
+
+
 char* bfAllocate (int size) {
     char* p = bfWriter;
     bfWriter += size;
@@ -114,8 +117,10 @@ struct Savestate{
                 ff += 12;
             }
         }
-        //X_size = X_end - X;
     }
+
+    bool isAllDead() {return X_end == X;}
+
 
     void findSafe() {
         f = F;
@@ -162,11 +167,6 @@ struct Savestate{
             ++x;
             f += 12;
             if (x == x_end) {bfWriter = (char*) Y_sorted; return 1;}
-            while (f[MINE] >= l_min) {
-                ++x;
-                f += 12;
-                if (x == x_end) {bfWriter = (char*) Y_sorted; return 1;}
-            }
 
             sortY(data, width);
             boundary();
@@ -192,8 +192,13 @@ struct Savestate{
 
         l_min = length - 1;
     }
-
-
+    /*
+    void from_parent(Savestate* a, char* data, int width) {
+        a->section(&Y, &Y_end);
+        int length = Y_end - Y;
+        Y_sorted = (int*) bfAllocate(length * sizeof(int));
+        filterLiving(a->X, a->X_end, *a->x, data, width);
+    }
 
     void sortX() {
         int M[480];
@@ -204,7 +209,7 @@ struct Savestate{
         quicksorter.mimic(f, 12 * sizeof(int));
 
     }
-
+    */
 
     std::vector<int> to_vec() {
         std::vector<int> vec;
@@ -212,6 +217,7 @@ struct Savestate{
         return vec;
     }
 
+    // PRINT FUNCTIONS
     void print(char* data, int width) {
         for (int* i = Y; i < Y_end; ++i) {
             printcArray(data+*i*width, data+(*i+1)*width);
@@ -267,8 +273,7 @@ struct Savestate{
         }
         std::cout << "] ";
     }
-
-
+    // END OF PRINT FUNCTIONS
 };
 
 
@@ -308,10 +313,10 @@ public:
         solve();
     }
 
-
+    // PRINT FUNCTIONS
     void printM() {std::cout << "M: ["; for (Savestate* i = savestates; i <= a; ++i) std::cout << i->f[MINE] << ' '; std::cout << "] ";}
     void printLMin() {std::cout << "L: ["; for (Savestate* i = savestates; i <= a; ++i) std::cout << i->l_min << ' '; std::cout << "] ";}
-    void printW() {printiArray(W, W+width); std::cout << std::endl; }
+    void printW() {std::cout << "W: ["; printiArray(W, W+width); std::cout << "]\n"; }
 
 
     void printClues() {
@@ -327,21 +332,21 @@ public:
         double portion = 1;
 
         printClues();
-        a->printx();
+
         for (Savestate* i = savestates; i <= a; ++i) {
             completion += i->completion(&portion);
         }
+
+
         std::cout << std::fixed << std::setprecision(2) << completion * 100 << "%";
         std::cout << std::endl;
     }
-
-
-
+    // END OF PRINT FUNCTIONS
 
 private:
 
     void firstSavestate() {
-
+        ++stat.node;
         a = savestates;
         a->first(data, length, width);
         a->sortY(data, width);
@@ -356,23 +361,23 @@ private:
         int hashValue;
         int* begin;
         int* end;
+        std::vector<int> vec;
 
         a->section(&begin, &end);
         if (end - begin < 2) goto increment;
-        if (a->f[MINE] >= a->l_min && (PRUNE || a != savestates)) goto increment;
+        if (a->f[MINE] >= a->l_min && (a != savestates || PRUNE)) goto increment;
+
         // match dictionary
         ++stat.node;
-
         hashValue = hashTable.find(begin, end);
         if (hashValue != -1) {++stat.cachehit; a->f[MINE] += hashValue; goto increment;}
 
         // create children
-
         a[1].create(begin, end);
         a[1].filterLiving(a->X, a->X_end, *a->x, data, width);
 
         // If all tiles are dead
-        if (a[1].X_end == a[1].X) { a->f[MINE] += a[1].l_min; goto increment;}
+        if (a[1].isAllDead()) { a->f[MINE] += a[1].l_min; goto increment;}
 
         // Further analysis required: Assign x, c
 
@@ -390,6 +395,7 @@ private:
 
             ++stat.cachebuild;
             hashTable.insert(a->Y, a->Y_end, a->l_min);
+
             --a;
             a->f[MINE] += a[1].l_min;
         }
@@ -409,18 +415,21 @@ private:
     }
 
     void solve() {
+        std::cout << "Analyzing " << length << " candidates" << std::endl;
         firstSavestate();
+
+        //savestates->x_end = savestates->x+1;
         int status;
         double completed;
 
         while (1) {
             ++stat.iteration;
-
             status = nextSavestate();
             if (status == -1) break;
             if (stat.iteration % 1000000 == 0) printCompletion();
 
         }
+
         std::cout << "Brute force analysis complete \n";
         getWins();
         printW();

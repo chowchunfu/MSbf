@@ -161,12 +161,14 @@ struct Board {
         ss >> height; ss.ignore(1);
         ss >> mineCount;
 
+        if (width < 1 || width > 100 || height < 1 || height > 100) {printf("board.cpp: invalid board!"); exit(0);}
         createBoard(width, height, mineCount);
 
         char* p = contents;
         for (int y = 0; y < height; y++) {
             ss >> p;
-            for (int x = 0; x < width; x++) *p++ = CharToEnum(*p);
+            for (int x = 0; x < width; x++) p[x] = CharToEnum(p[x]);
+            p += width;
         }
 
         return;

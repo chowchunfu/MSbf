@@ -3,7 +3,7 @@ import ctypes
 import numpy as np
 import math
 
-FILENAME = "mbfa/5x5x5.txt" #input("Enter filename: ")
+FILENAME = "mbfa.txt" #input("Enter filename: ")
 
 
 def generateLED(remainingMines):
@@ -92,5 +92,4 @@ for y in range(height):
 
 
 cv2.imwrite('output_image.png', img)
-cv2.imshow('img', img);
-cv2.waitKey();
+
