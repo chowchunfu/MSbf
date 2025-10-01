@@ -5,12 +5,14 @@
 #include <cstring>
 #include <vector>
 #include <map>
-#include <math.h>
+#include <chrono>
+
+
 
 #include "utils.cpp"
 #include "array.cpp"
 #include "hashtable.cpp"
-#include "quicksort.cpp"
+//#include "quicksort.cpp"
 
 const bool IGNORE_DEAD = 0;
 const bool PRUNE = 0;
@@ -18,7 +20,10 @@ const bool PRUNE = 0;
 char bfCache[16777216];
 char* bfWriter;
 
-std::map<std::vector<int>, int> mymap;
+//std::map<std::vector<int>, int> mymap;
+
+std::chrono::system_clock::time_point t1;
+std::chrono::system_clock::time_point t2;
 
 
 char* bfAllocate (int size) {
@@ -29,6 +34,7 @@ char* bfAllocate (int size) {
 }
 
 struct BruteForceAnalyzerStat {
+    double elapsed;
     uint64_t cachebuild;
     uint64_t cachehit;
     uint64_t iteration;
@@ -37,6 +43,17 @@ struct BruteForceAnalyzerStat {
     BruteForceAnalyzerStat() {
         memset(this, 0, sizeof(BruteForceAnalyzerStat));
     }
+
+    void startClock() {
+        t1 = std::chrono::system_clock::now();
+    }
+
+    void lap() {
+        t2 = std::chrono::system_clock::now();
+        elapsed += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1e6;
+        t1 = t2;
+    }
+
 
     void print() {
         std::string s =
@@ -55,6 +72,8 @@ struct Savestate{
 
     int* Y;     // candidates
     int* Y_end;
+    int* Y_sorted;
+
 
     int* X;     // indexes
     int* X_end;
@@ -66,18 +85,16 @@ struct Savestate{
     int* f;
     int offsets[13];
 
-    int* Y_sorted;
-
-    char c;
     char low;
     char high;
-
+    char c;
 
     int l_min;
 
+
+
+
     void first(char* data, int length, int width) {
-
-
         Y = (int*) bfAllocate(length * sizeof(int));
         Y_sorted = (int*) bfAllocate(length * sizeof(int));
 
@@ -192,6 +209,51 @@ struct Savestate{
 
         l_min = length - 1;
     }
+
+    // FILE FUNCTIONS
+    void put(std::ofstream& file) {
+        int Y_size = Y_end-Y;
+        int X_size = X_end-X;
+        int x_offset = x-X;
+        int x_size = x_end-x;
+        file.write((char*) &Y_size, sizeof(int));
+        file.write((char*) Y_sorted, Y_size*sizeof(int));
+        file.write((char*) &X_size, sizeof(int));
+        file.write((char*) X, X_size * sizeof(int));
+        file.write((char*) &x_offset, sizeof(int));
+        file.write((char*) &x_size, sizeof(int));
+        file.write((char*) F, 12*X_size*sizeof(int));
+        file.write((char*) &l_min, sizeof(int));
+        file.write((char*) &low, sizeof(char));
+        file.write((char*) &high, sizeof(char));
+        file.write((char*) &c, sizeof(char));
+    }
+
+
+    void take(std::ifstream& file) {
+        int Y_size;
+        int X_size;
+        int x_offset;
+        int x_size;
+        file.read((char*) &Y_size, sizeof(int));
+        file.read((char*) Y_sorted, Y_size*sizeof(int));
+        file.read((char*) &X_size, sizeof(int)); X_end = X + X_size;
+        file.read((char*) X, X_size * sizeof(int));
+        file.read((char*) &x_offset, sizeof(int)); x = X + x_offset; f = F + x_offset * 12;
+        file.read((char*) &x_size, sizeof(int)); x_end = x + x_size;
+        file.read((char*) F, 12*X_size*sizeof(int));
+        file.read((char*) &l_min, sizeof(int));
+        file.read((char*) &low, sizeof(char));
+        file.read((char*) &high, sizeof(char));
+        file.read((char*) &c, sizeof(char));
+
+        for (int k = 0; k < 12; ++k) offsets[k+1] = offsets[k] + f[k];
+
+        //std::cout << Y_end - Y << ' ';
+
+    }
+    // END OF FILE FUNCTIONS
+
     /*
     void from_parent(Savestate* a, char* data, int width) {
         a->section(&Y, &Y_end);
@@ -310,6 +372,14 @@ public:
 
         }
 
+        if (takeSavestates()) {
+            std::cout << "Savestates not found, Starting from scratch" << std::endl;
+            firstSavestate();
+        } else {
+            std::cout << "Savestates found, resuming" << std::endl;
+
+        }
+
         solve();
     }
 
@@ -356,7 +426,8 @@ private:
         //a->sortX();
     }
 
-    int nextSavestate() {
+
+    int nextSavestate() {  // core function
         int r;
         int hashValue;
         int* begin;
@@ -414,26 +485,79 @@ private:
         }
     }
 
-    void solve() {
-        std::cout << "Analyzing " << length << " candidates" << std::endl;
-        firstSavestate();
 
-        //savestates->x_end = savestates->x+1;
+
+
+    void solve() {
+
+        std::cout << "Analyzing " << length << " candidates" << std::endl;
+        stat.startClock();
         int status;
-        double completed;
 
         while (1) {
             ++stat.iteration;
             status = nextSavestate();
             if (status == -1) break;
-            if (stat.iteration % 1000000 == 0) printCompletion();
 
+            if (stat.iteration % 1000000 == 0) {
+                printCompletion();
+                if (stat.iteration % 100000000 == 0) {
+                    stat.lap();
+                    putSavestates();
+                }
+            }
         }
 
+        stat.lap();
         std::cout << "Brute force analysis complete \n";
         getWins();
         printW();
 
     }
 
+    // FILE FUNCTIONS
+    void putSavestates() {
+        std::ofstream f("bfa.savestates", std::ios::binary);
+        f.write((char*) &length, sizeof(int));
+        f.write((char*) &width, sizeof(int));
+        f.write((char*) &stat, sizeof(BruteForceAnalyzerStat));
+
+        int no_of_savestates = a - savestates + 1;
+        f.write((char*) &no_of_savestates, sizeof(int));
+        for (int i = 0; i < no_of_savestates; ++i) {
+            savestates[i].put(f);
+        }
+
+        f.close();
+    }
+
+    IFERROR takeSavestates() {
+        std::ifstream f("bfa.savestates", std::ios::binary);
+        if (!f.is_open()) return 1; //printf("bfa.cpp: savestates not found!\n")
+
+        int length_; f.read((char*) &length_, sizeof(int));
+        int width_; f.read((char*) &width_, sizeof(int));
+        if (length_ != length || width_ != width) return 1;//{printf("bfa.cpp: savestates doesn't match!\n"); return 1;}
+        f.read((char*) &stat, sizeof(BruteForceAnalyzerStat));
+
+        int no_of_savestates;
+        f.read((char*) &no_of_savestates, sizeof(int));
+
+        a = savestates + no_of_savestates - 1;
+
+        int* begin = (int*) bfAllocate(length * sizeof(int));
+        int* end = begin;
+        for (int i = 0; i < length; ++i) {*end++ = i;}
+
+        for (int i = 0; i < no_of_savestates; ++i) {
+            savestates[i].create(begin, end);
+            savestates[i].take(f);
+            savestates[i].section(&begin, &end);
+
+        }
+
+        f.close();
+        return 0;
+    }
+    // END OF FILE FUNCTIONS
 };

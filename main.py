@@ -21,6 +21,14 @@ def generateLED(remainingMines):
         pass
     cv2.imwrite('led.png', led)
 
+def getRect(x, y):
+    return x*48, y*48, (x+1)*48, (y+1)*48
+
+def blend(im1, im2, alpha):
+    im3 = im1 * alpha + im2  * (1-alpha)
+    im3 = np.rint(im3).astype(np.uint8)
+    return im3
+
 
 
 #load dll
@@ -40,6 +48,12 @@ for i in range(12):
     texture = cv2.resize(texture, (48, 48));
     textures.append(texture)
 
+#generate highlighted tile
+highlight = np.zeros((48,48,3),dtype=np.uint8);
+highlight[:,:] = (127,255,127)
+highlighted = blend(highlight, textures[9], 0.5)
+
+
 #get width / height
 f = open(FILENAME, "r");
 line = f.readline().split('x');
@@ -56,17 +70,23 @@ for y in range(height):
         i = y * width + x
         c = mydll.getContent(i);
  
-        x1 = x * 48;
-        x2 = (x+1)*48;
-
-        y1 = y * 48;
-        y2 = (y+1)*48;
-        
+        x1, y1, x2, y2 = getRect(x,y)
         img[y1:y2,x1:x2] = textures[c]
 
 
+#get safest cell
+safest = -1;
+wp_max = 0;
+for y in range(height):
+    for x in range(width):
+        i = y * width + x
+        wp = mydll.getWinningProbability(i);
+        if (wp > wp_max):
+            wp_max = wp
+            safest = (x,y)
 
-
+x1, y1, x2, y2 = getRect(*safest)
+img[y1:y2,x1:x2] = highlighted
 
 # paste labels
 font = cv2.FONT_HERSHEY_SIMPLEX;
@@ -92,4 +112,5 @@ for y in range(height):
 
 
 cv2.imwrite('output_image.png', img)
-
+#cv2.imshow('a', img);
+#cv2.waitKey(0);

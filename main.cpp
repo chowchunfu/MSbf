@@ -3,9 +3,6 @@
 #include "include/pcal.cpp"
 #include "include/bfa.cpp"
 
-std::chrono::system_clock::time_point t1;
-std::chrono::system_clock::time_point t2;
-double elapsed;
 
 Board board;
 ProbabilityCalculator pcal;
@@ -17,21 +14,19 @@ void writeBFResult() {
     time_t now = std::chrono::system_clock::to_time_t(t2);
     struct tm *local_tm = localtime(&now);
     strftime(datebuffer, 80, "%Y-%m-%d %H:%M:%S", local_tm);
-    f << "density," <<  std::fixed << std::setprecision(2) << pcal.density*100 << "%" << std::endl;
-    f << "length," << bfa.length << std::endl;
-    f << "width," << bfa.width << std::endl;
-    f << "cachebuild," << bfa.stat.cachebuild << std::endl;
-    f << "cachehit," << bfa.stat.cachehit << std::endl;
-    f << "iteration," << bfa.stat.iteration << std::endl;
+
+    f << "Candidates: " << bfa.length << std::endl;
+    f << "Hidden cells: " << bfa.width << std::endl;
+    f << "Density: " <<  std::fixed << std::setprecision(2) << pcal.density*100 << "%" << std::endl << std::endl;
+    //f << "cachebuild," << bfa.stat.cachebuild << std::endl;
+    //f << "cachehit," << bfa.stat.cachehit << std::endl;
+    //f << "iteration," << bfa.stat.iteration << std::endl;
     //f << "collision," << hashTable.stat_collision << std::endl;
 
-
-    f << "Elapsed: " << std::fixed << std::setprecision(6) << elapsed << " s" << std::endl;
+    f << "Elapsed: " << std::fixed << std::setprecision(6) << bfa.stat.elapsed << " s" << std::endl;
     f << "Nodes explored: " << bfa.stat.node << std::endl;
     f << "Confidence: " << std::fixed << std::setprecision(14) << (double) 1 - bfa.stat.node / 1.8446744073709551616 / 1e19  << std::endl;
     f << "Date: " << datebuffer << std::endl;
-
-
 
     f.close();
 
@@ -52,20 +47,22 @@ void writeBFResult() {
     std::cout << "saved result as bfresult.csv" << std::endl;
 }
 
+extern "C" void loadBoard(const char* filename) {
+    board.from_file(filename);
+}
+
 extern "C" void run(const char* filename) {
-    t1 = std::chrono::system_clock::now(); // start clock
     board.from_file(filename);
     pcal = ProbabilityCalculator(&board);
     cArray2d candidates = pcal.permutateCandidateSolutions();
     //candidates.to_file("abcd.txt");
     bfa = BruteForceAnalyzer(&candidates);
-    t2 = std::chrono::system_clock::now(); // end clock
 
-    elapsed = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1e6;
     bfa.stat.print();
     writeBFResult();
 
 }
+
 
 extern "C" int getRemainingMines() {
     return pcal.remainingMine;
@@ -85,7 +82,7 @@ extern "C" double getWinningProbability(int index) {
 
 int main() {
     //run("mbfa/b1.txt");
-    //run("mbfa/b2_1.txt");
+    run("mbfa.txt");
 
 
     return 0;
