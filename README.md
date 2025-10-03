@@ -41,11 +41,12 @@ The program will recursively place the numbers until all numbers have been teste
 
 <br />
 Method 2: Use the existing main.exe to run the program
+
 <img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
 
-If the file is blocked by the antivirus software or you don't trust the file anyway, please go to the first method.
-
-
+If the file is blocked by the antivirus softwares, please use the first method instead.
+##
+Method 3: 
 
 
 
