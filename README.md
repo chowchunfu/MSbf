@@ -4,10 +4,7 @@ Download and unpack the zip archive from this page
 
 <img width="465" height="380" alt="image" src="https://github.com/user-attachments/assets/7bef89a1-2ef4-4a94-91d0-13191681ef7b" />
 
-## 3 methods to execute the program
 
-Method 1: Download GCC compiler following the tutorial
-https://code.visualstudio.com/docs/cpp/config-mingw
 
 Open command prompt
 
@@ -20,6 +17,10 @@ cd C:\"some path"\MSbf
 
 <img width="575" height="25" alt="image" src="https://github.com/user-attachments/assets/bbdf1268-48f5-49e0-8088-8067a883a539" />
 
+## 3 methods to execute the program
+
+Method 1: Download GCC compiler following the tutorial
+https://code.visualstudio.com/docs/cpp/config-mingw
 
 Type the following command to compile the source codes:
 
@@ -39,14 +40,18 @@ The program will recursively place the numbers until all numbers have been teste
 
 
 
-<br />
+##
 Method 2: Use the existing main.exe to run the program
 
 <img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
 
 If the file is blocked by the antivirus softwares, please use the first method instead.
 ##
-Method 3: 
+Method 3: (require Python)
+
+Type the following command to run the python script:
+
+py main.py
 
 
 
