@@ -4,7 +4,7 @@ Download and unpack the zip archive from this page
 
 <img width="465" height="380" alt="image" src="https://github.com/user-attachments/assets/7bef89a1-2ef4-4a94-91d0-13191681ef7b" />
 
-##3 methods to execute the program
+## 3 methods to execute the program
 
 Method 1: Download GCC compiler following the tutorial
 https://code.visualstudio.com/docs/cpp/config-mingw
@@ -36,6 +36,19 @@ main.exe
 The program will recursively place the numbers until all numbers have been tested.
 
 <img width="554" height="217" alt="image" src="https://github.com/user-attachments/assets/1d5349d6-b047-450d-829e-2adb69973afd" />
+
+
+
+<br />
+Method 2: Use the existing main.exe to run the program
+<img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
+
+If the file is blocked by the antivirus software or you don't trust the file anyway, please go to the first method.
+
+
+
+
+
 
 After the program is finished, two text files "bfinfo.txt" and "bfresult.csv" are generated. Click them to view the result
 
