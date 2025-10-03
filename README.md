@@ -34,7 +34,7 @@ main.exe
 
 <img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
 
-The program will recursively place the numbers until all numbers have been tested.
+The program will recursively place the numbers until all combinations have been tested.
 
 <img width="554" height="217" alt="image" src="https://github.com/user-attachments/assets/1d5349d6-b047-450d-829e-2adb69973afd" />
 
@@ -66,7 +66,21 @@ Generate an image of win probability by typing: (Python required)
 
 py printresults.py
 
+
+
 ## Editing the board
+
+Use the board editor from https://davidnhill.github.io/JSMinesweeper/index.html
+
+<img width="1015" height="618" alt="image" src="https://github.com/user-attachments/assets/28b74301-ccbf-42c9-8718-a62a60da3499" />
+
+Click "Save position and replace the existing "bfboard.txt".
+
+## Resume an unfinished brute force
+
+The brute force program will automatically make a savestate every 100,000,000 iterations (about 2 minutes).
+
+When starting the program, it will first detect if there is an existing savestate. If success, it will continue to compute the remaining combinations.
 
 
 
