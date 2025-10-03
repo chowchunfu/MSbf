@@ -14,13 +14,23 @@ Open command prompt
 <img width="592" height="122" alt="image" src="https://github.com/user-attachments/assets/bc9042f3-a3e4-4017-b6cc-22d5d4131b91" />
 
 
-
 Type the following command: 
+
 cd C:\"some path"\MSbf
 
 <img width="575" height="25" alt="image" src="https://github.com/user-attachments/assets/bbdf1268-48f5-49e0-8088-8067a883a539" />
 
+
 Type the following command:
+
 g++ main.cpp -o main.exe
+
 <img width="574" height="24" alt="image" src="https://github.com/user-attachments/assets/b6d94f29-377a-469f-a4eb-4ae75346075b" />
+
+Type the following command to run the program:
+
+main.exe
+
+<img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
+
 
