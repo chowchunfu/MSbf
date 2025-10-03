@@ -14,14 +14,14 @@ Open command prompt
 <img width="592" height="122" alt="image" src="https://github.com/user-attachments/assets/bc9042f3-a3e4-4017-b6cc-22d5d4131b91" />
 
 
-Type the following command: 
+Type the following command to locate this folder: 
 
 cd C:\"some path"\MSbf
 
 <img width="575" height="25" alt="image" src="https://github.com/user-attachments/assets/bbdf1268-48f5-49e0-8088-8067a883a539" />
 
 
-Type the following command:
+Type the following command to compile the source codes:
 
 g++ main.cpp -o main.exe
 
