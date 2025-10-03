@@ -36,8 +36,7 @@ main.exe
 
 The program will recursively place the numbers until all combinations have been tested.
 
-<img width="554" height="217" alt="image" src="https://github.com/user-attachments/assets/1d5349d6-b047-450d-829e-2adb69973afd" />
-
+<img width="442" height="151" alt="image" src="https://github.com/user-attachments/assets/a415d9a7-0a20-4846-a4cc-0475f4e9816d" />
 
 
 ##
@@ -55,16 +54,17 @@ py main.py
 
 <img width="604" height="26" alt="image" src="https://github.com/user-attachments/assets/b071eafa-311e-4b8e-aa5b-98a5d9e6376b" />
 
+
+
 ## View the results
 
-After the program is finished, two text files "bfinfo.txt" and "bfresult.csv" are generated. Click them to view the result
-
-<img width="468" height="312" alt="image" src="https://github.com/user-attachments/assets/ba86860a-0945-4afa-9986-5fcdf451df64" />
-<img width="439" height="318" alt="image" src="https://github.com/user-attachments/assets/62bae66f-2fc1-4542-8a74-d5264d47fb19" />
+After the program is finished, two text files "bfinfo.txt" and "bfresult.csv" are generated. Click them to view the result.
 
 Generate an image of win probability by typing: (Python required)
 
 py printresults.py
+
+<img width="288" height="288" alt="winprobabilities" src="https://github.com/user-attachments/assets/0bf7e135-5368-4bb4-81e0-e8dd77364049" />
 
 
 
