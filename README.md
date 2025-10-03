@@ -1,22 +1,26 @@
 ## How to do a brute force analysis
 
-Download and unpack the zip archive
+Download and unpack the zip archive from this page
 
 <img width="465" height="380" alt="image" src="https://github.com/user-attachments/assets/7bef89a1-2ef4-4a94-91d0-13191681ef7b" />
 
-3 methods to execute the program
+##3 methods to execute the program
 
 Method 1: Download GCC compiler following the tutorial
 https://code.visualstudio.com/docs/cpp/config-mingw
 
-Step 2: open command prompt
+Open command prompt
 
-<img width="847" height="449" alt="image" src="https://github.com/user-attachments/assets/eeeb37b3-f9f7-4615-8e4f-7db87575094d" />
+<img width="592" height="122" alt="image" src="https://github.com/user-attachments/assets/bc9042f3-a3e4-4017-b6cc-22d5d4131b91" />
 
 
-Step 3: type the following command: 
-cd C:/"some path"/MSbf
 
-<img width="845" height="449" alt="image" src="https://github.com/user-attachments/assets/767a6b1c-fa2c-4055-87dd-500c61c555cc" />
+Type the following command: 
+cd C:\"some path"\MSbf
 
+<img width="575" height="25" alt="image" src="https://github.com/user-attachments/assets/bbdf1268-48f5-49e0-8088-8067a883a539" />
+
+Type the following command:
+g++ main.cpp -o main.exe
+<img width="574" height="24" alt="image" src="https://github.com/user-attachments/assets/b6d94f29-377a-469f-a4eb-4ae75346075b" />
 
