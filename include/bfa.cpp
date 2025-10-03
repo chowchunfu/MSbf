@@ -92,27 +92,8 @@ struct Savestate{
     int l_min;
 
 
-
-
-    void first(char* data, int length, int width) {
-        Y = (int*) bfAllocate(length * sizeof(int));
-        Y_sorted = (int*) bfAllocate(length * sizeof(int));
-
-        Y_end = Y; for (int i = 0; i < length; ++i) *Y_end++ = i;
-        X_end = X; for (int i = 0; i < width; ++i) *X_end++ = i;
-
-        l_min = length - 1;
-
-
-        if (IGNORE_DEAD) {
-            filterLiving(X, X_end, -1, data, width);
-        } else {
-            for (int i = 0; i < width; ++i) frequency(F+12*i, i, data, width);
-        }
-        x_end = X_end;
-        x = X;
-        f = F;
-    }
+    
+    
 
     void frequency(int* f, int x, char* data, int width) {
         memset(f, 0, 12*sizeof(int));
@@ -135,6 +116,23 @@ struct Savestate{
             }
         }
     }
+
+    void filterProbablySafe(int* _X, int* _X_end, int _x, char* data, int width) {
+        int* ff = F;
+        X_end = X;
+        for (int* i = _X; i < _X_end; ++i) {
+            if (*i == _x) continue;
+            frequency(ff, *i, data, width);
+
+            if (ff[MINE] != Y_end-Y) {
+                *X_end++ = *i;
+                ff += 12;
+            }
+        }
+        
+    }
+
+
 
     bool isAllDead() {return X_end == X;}
 
@@ -418,12 +416,23 @@ private:
     void firstSavestate() {
         ++stat.node;
         a = savestates;
-        a->first(data, length, width);
+        
+        int* begin = (int*) bfAllocate(length * sizeof(int));
+        int* end = begin;
+        for (int i = 0; i < length; ++i) {*end++ = i;}
+        a->create(begin, end);
+        
+        a->X_end = a->X;
+        for (int i = 0; i < width; ++i) {*a->X_end++ = i;}
+        a->filterProbablySafe(a->X, a->X_end, -1, data, width);
+        a->x_end = a->X_end;
+        a->x = a->X;
+        a->f = a->F;
+        
         a->sortY(data, width);
         a->boundary();
 
-        //a->filterLiving(a->X, a->X_end, -1, data, width);
-        //a->sortX();
+
     }
 
 
@@ -481,7 +490,7 @@ private:
         for (int i = 0; i < X_size; ++i) {
             int x = savestates->X[i];
             W[x] = length - savestates->F[i*12+MINE];
-            winningProbabilities[i] = (double) W[i] / length;
+            winningProbabilities[x] = (double) W[x] / length;
         }
     }
 
@@ -498,7 +507,7 @@ private:
             ++stat.iteration;
             status = nextSavestate();
             if (status == -1) break;
-
+             
             if (stat.iteration % 1000000 == 0) {
                 printCompletion();
                 if (stat.iteration % 100000000 == 0) {
@@ -506,6 +515,7 @@ private:
                     putSavestates();
                 }
             }
+            
         }
 
         stat.lap();

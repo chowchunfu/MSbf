@@ -217,6 +217,7 @@ private:
 
 public:
     double globalSolutionCount;
+    int hiddenCount;
     int floatingCount;
     int remainingMine;
     double density;
@@ -381,9 +382,11 @@ private:
         }
 
         // number of hidden / floating / remaining mines
+        hiddenCount = 0;
         floatingCount = 0;
         remainingMine = mineCount;
         for (int i = 0; i < size; ++i) {
+            hiddenCount += cp[i].isHidden;
             floatingCount += cp[i].isFloating;
             remainingMine -= cp[i].isFlagged;
         }
@@ -471,6 +474,8 @@ private:
         sumProductDensity = 0;
         density = 0;
         accum(0, 1, 0, weight2s);
+
+        if (!globalSolutionCount) {printf("pcal.cpp: No solution found!"); exit(100);}
 
         if (floatingCount) density = (double) sumProductDensity / globalSolutionCount / floatingCount;
         //for (int i = 0; i < mineRange; ++i) std::cout << weight2s[i] << ' ';
