@@ -74,7 +74,7 @@ Use the board editor from https://davidnhill.github.io/JSMinesweeper/index.html
 
 <img width="1015" height="618" alt="image" src="https://github.com/user-attachments/assets/28b74301-ccbf-42c9-8718-a62a60da3499" />
 
-Click "Save position and replace the existing "bfboard.txt".
+Click "Save position" and replace the existing "bfboard.txt.
 
 ## Resume an unfinished brute force
 
