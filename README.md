@@ -53,13 +53,20 @@ Type the following command to run the python script:
 
 py main.py
 
+<img width="604" height="26" alt="image" src="https://github.com/user-attachments/assets/b071eafa-311e-4b8e-aa5b-98a5d9e6376b" />
 
-
+## View the results
 
 After the program is finished, two text files "bfinfo.txt" and "bfresult.csv" are generated. Click them to view the result
 
 <img width="468" height="312" alt="image" src="https://github.com/user-attachments/assets/ba86860a-0945-4afa-9986-5fcdf451df64" />
 <img width="439" height="318" alt="image" src="https://github.com/user-attachments/assets/62bae66f-2fc1-4542-8a74-d5264d47fb19" />
+
+Generate an image of win probability by typing: (Python required)
+
+py printresults.py
+
+## Editing the board
 
 
 
