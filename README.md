@@ -28,7 +28,7 @@ g++ main.cpp -o main.exe
 
 <img width="574" height="24" alt="image" src="https://github.com/user-attachments/assets/b6d94f29-377a-469f-a4eb-4ae75346075b" />
 
-Type the following command to run the program:
+Type the following command to run the program: (about 1GB RAM required)
 
 main.exe
 
