@@ -33,4 +33,14 @@ main.exe
 
 <img width="576" height="23" alt="image" src="https://github.com/user-attachments/assets/36be9634-188e-435e-b3d0-cee487555cd2" />
 
+The program will recursively place the numbers until all numbers have been tested.
+
+<img width="554" height="217" alt="image" src="https://github.com/user-attachments/assets/1d5349d6-b047-450d-829e-2adb69973afd" />
+
+After the program is finished, two text files "bfinfo.txt" and "bfresult.csv" are generated. Click them to view the result
+
+<img width="468" height="312" alt="image" src="https://github.com/user-attachments/assets/ba86860a-0945-4afa-9986-5fcdf451df64" />
+<img width="439" height="318" alt="image" src="https://github.com/user-attachments/assets/62bae66f-2fc1-4542-8a74-d5264d47fb19" />
+
+
 
