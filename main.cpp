@@ -8,6 +8,16 @@ Board board;
 ProbabilityCalculator pcal;
 BruteForceAnalyzer bfa;
 
+
+void readConfig() {
+    std::ifstream f("config.txt");
+    std::string s;
+    int val;
+    f >> s; f >> val;
+    if (0 < val) HASHTABLE_MEGABYTE = val;
+}
+
+
 void writeBFResult() {
     std::ofstream f("bfinfo.txt");
     char datebuffer[80];
@@ -19,12 +29,12 @@ void writeBFResult() {
     f << "Cache builds: " << bfa.stat.cachebuild << std::endl;
     f << "Cache hits: " << bfa.stat.cachehit << std::endl << std::endl;
     //f << "collision," << hashTable.stat_collision << std::endl;
-    
+
     f << "Candidates: " << pcal.globalSolutionCount << std::endl;
     f << "Hidden cells: " << pcal.hiddenCount << std::endl;
     f << "Density: " <<  std::fixed << std::setprecision(2) << pcal.density*100 << "%" << std::endl << std::endl;
 
-    
+
 
     f << "Elapsed: " << std::fixed << std::setprecision(6) << bfa.stat.elapsed << " s" << std::endl;
     f << "Nodes explored: " << bfa.stat.node << std::endl;
@@ -64,6 +74,7 @@ extern "C" void no_bfa(const char* filename) {
 
 
 extern "C" void run(const char* filename) {
+    readConfig();
     board.from_file(filename);
     pcal = ProbabilityCalculator(&board);
     cArray2d candidates = pcal.permutateCandidateSolutions();
@@ -77,6 +88,7 @@ extern "C" void run(const char* filename) {
 
 
 int main() {
+
     run("bfboard.txt");
 
 
