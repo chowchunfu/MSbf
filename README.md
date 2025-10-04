@@ -28,7 +28,7 @@ g++ main.cpp -o main.exe
 
 <img width="574" height="24" alt="image" src="https://github.com/user-attachments/assets/b6d94f29-377a-469f-a4eb-4ae75346075b" />
 
-Type the following command to run the program: (about 1GB RAM required)
+Type the following command to run the program:
 
 main.exe
 
@@ -75,6 +75,13 @@ Use the board editor from https://davidnhill.github.io/JSMinesweeper/index.html
 <img width="1015" height="618" alt="image" src="https://github.com/user-attachments/assets/28b74301-ccbf-42c9-8718-a62a60da3499" />
 
 Click "Save position" and replace the existing "bfboard.txt.
+
+## Config the RAM allocatable for hash tables
+
+Config the megabytes allocated by opening "config.txt".
+
+Larger hashtable means a bigger chance to cache hit and a faster computation time, but it may hinder other process from running. 
+
 
 ## Resume an unfinished brute force
 
