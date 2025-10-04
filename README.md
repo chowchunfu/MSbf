@@ -19,7 +19,7 @@ cd C:\"some path"\MSbf
 
 ## 3 methods to execute the program
 
-Method 1: Download GCC compiler following the tutorial
+Method 1: Download GCC compiler or follow the tutorial
 https://code.visualstudio.com/docs/cpp/config-mingw
 
 Type the following command to compile the source codes:
