@@ -92,8 +92,8 @@ struct Savestate{
     int l_min;
 
 
-    
-    
+
+
 
     void frequency(int* f, int x, char* data, int width) {
         memset(f, 0, 12*sizeof(int));
@@ -129,7 +129,7 @@ struct Savestate{
                 ff += 12;
             }
         }
-        
+
     }
 
 
@@ -346,6 +346,8 @@ private:
     Savestate* a;
     int status;
 
+    HashTable hashTable;
+
 public:
     BruteForceAnalyzerStat stat;
     int* W;
@@ -367,8 +369,10 @@ public:
             savestates[i].X = (int*) bfAllocate(width * sizeof(int));
             savestates[i].F = (int*) bfAllocate(12 * width * sizeof(int));
             savestates[i].offsets[0] = 0;
-
         }
+
+        hashTable = HashTable(HASHTABLE_MEGABYTE);
+
 
         if (takeSavestates()) {
             std::cout << "Savestates not found, Starting from scratch" << std::endl;
@@ -416,19 +420,19 @@ private:
     void firstSavestate() {
         ++stat.node;
         a = savestates;
-        
+
         int* begin = (int*) bfAllocate(length * sizeof(int));
         int* end = begin;
         for (int i = 0; i < length; ++i) {*end++ = i;}
         a->create(begin, end);
-        
+
         a->X_end = a->X;
         for (int i = 0; i < width; ++i) {*a->X_end++ = i;}
         a->filterProbablySafe(a->X, a->X_end, -1, data, width);
         a->x_end = a->X_end;
         a->x = a->X;
         a->f = a->F;
-        
+
         a->sortY(data, width);
         a->boundary();
 
@@ -507,7 +511,7 @@ private:
             ++stat.iteration;
             status = nextSavestate();
             if (status == -1) break;
-             
+
             if (stat.iteration % 1000000 == 0) {
                 printCompletion();
                 if (stat.iteration % 100000000 == 0) {
@@ -515,7 +519,7 @@ private:
                     putSavestates();
                 }
             }
-            
+
         }
 
         stat.lap();
