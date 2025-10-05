@@ -15,7 +15,7 @@ typedef struct {
 
 class HashTable {
     uint64_t stat_collision = 0;
-    int capacity;
+    uint64_t capacity;
     HashDatum** data; // 1 megabyte = 1 door of storage room
 
     uint64_t hash64(int* begin, int* end, uint64_t h) {
@@ -43,7 +43,7 @@ class HashTable {
     public:
     HashTable() {}
 
-    HashTable(int megabyte) {
+    HashTable(size_t megabyte) {
 
         capacity = megabyte * 65536;
         data = (HashDatum**) malloc(megabyte * sizeof(HashDatum*));
